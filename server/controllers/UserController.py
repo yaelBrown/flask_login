@@ -1,17 +1,19 @@
-# from flask import Flask, request, Blueprint, jsonify
-# from flask_bcrypt import Bcrypt
+from flask import Flask, request, Blueprint, jsonify
+from flask_bcrypt import Bcrypt
 
 import service.UserService as UserService
+import json
 
 userService = UserService.UserService()
 
-import json
-
 class UserController:
-  def login(self,request):
+  users_bp = Blueprint('UsersController', __name__)
+
+  @users_bp.route('/login', methods=['POST'])
+  def login(self, request):
     user = request.json
     if user != None:
-        # userCorrect = userService.getUserByUsername(user["username"])
+        userCorrect = userService.getUserByUsername(user["username"])
         response = {}
         if userCorrect != None and \
                 user["password"] == userCorrect.getPassword() :

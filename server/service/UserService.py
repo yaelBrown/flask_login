@@ -1,7 +1,5 @@
-# import something here
-
 
 class UserService: 
-  pass
 
-
+  def __init__(self):
+    pass

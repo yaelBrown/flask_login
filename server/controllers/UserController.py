@@ -7,30 +7,51 @@ import json
 userService = UserService.UserService()
 
 class UserController:
-  users_bp = Blueprint('UsersController', __name__)
+  UserController = Blueprint('UsersController', __name__)
 
-  @users_bp.route('/login', methods=['POST'])
+  @UserController.route('/login', methods=['POST'])
   def login(self, request):
     user = request.json
+    
     if user != None:
-        userCorrect = userService.getUserByUsername(user["username"])
-        response = {}
-        if userCorrect != None and \
-                user["password"] == userCorrect.getPassword() :
-            response["result"] = "success"
+      try: 
+        db_user = userService.getUserByUsername(user["username"])
+        
+        if Bcrypt.check_password_hash(db_user["password"], user["password"]):
+          
+          out = {
+            "username": db_user["username"],
+            "email": db_user["email"],
+            "group": db_user["group"]
+          }
+          
+          return { "msg": "Successful login", "data": out }, 200
+        
         else:
-            response["result"] = "failed"
-        return json.dumps(response)
-    else:
-        return ""
+          return { "msg": "Unsucessful login"}
+      
+      except Exception as e:
+        return { "msg": f"Error trying to authenticate user {user['username']}", "Error": e }, 422
+  
+  @UserController.route('/register', methods=['POST'])
+  def register(self, request):
+    user = request.json
+    
+    if user != None: 
+      try:
 
-  def users(self):
-      users = userService.allUsers()
-      response = []
-      for user in users:
-          userItem = {}
-          userItem["id"] = user.getId()
-          userItem["username"] = user.getUsername()
-          userItem["password"] = user.getPassword()
-          response.append(userItem)
-      return json.dumps(response) 
+        newUser = {
+          "username": user["username"],
+          "password": Bcrypt.generate_password_hash(user["password"], rounds=12),
+          "email": user["email"],
+          "group": user["group"]
+        }
+        
+        userService.registerUser(newUser)
+        
+        del newUser["password"]
+        
+        return { "msg": "Successfully register user", "data": newUser }, 200
+      
+      except Exception as e:
+        return { "msg": f"Error trying to register user: {user['username']}", "error": e }, 422

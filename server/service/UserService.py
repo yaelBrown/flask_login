@@ -1,4 +1,4 @@
-
+from DbService import DbService as db
 
 # need to connect db to methods
 

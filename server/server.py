@@ -1,11 +1,13 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 
 from controllers.UserController import UserController
 
 import json
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 app.register_blueprint(UserController.UserController, url_prefix='/api/users')
 

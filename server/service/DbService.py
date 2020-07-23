@@ -1,11 +1,11 @@
 import pymysql
 
 class DbService:
-  DB_HOST = ''
-  DB_PORT = ''
-  DB_USER = ''
-  DB_PASSWORD = ''
-  DB_DATABASE = ''
+  DB_HOST = 'localhost'
+  DB_PORT = '3306'
+  DB_USER = 'admin'
+  DB_PASSWORD = 'admin'
+  DB_DATABASE = 'test'
   DB_CHARSET = ''
 
   con = pymysql.Connect(

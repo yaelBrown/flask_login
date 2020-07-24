@@ -9,7 +9,7 @@ import json
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-app.register_blueprint(UserController.UserController, url_prefix='/api/users')
+app.register_blueprint(UserController, url_prefix='/api/users')
 
 @app.route('/')
 def hello():

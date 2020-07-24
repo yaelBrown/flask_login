@@ -14,3 +14,16 @@ services:
         - MYSQL_USER=admin
         - MYSQL_PASSWORD=admin
         - MYSQL_DATABASE=test
+  python:
+    container_name: api_flask
+    image: python:3.9.0b5-alpine3.12
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    volumes: 
+      - ./server:/server
+    ports: 
+      - '5000:5000'
+    restart: on-failure
+    depends_on: 
+      - mysql
